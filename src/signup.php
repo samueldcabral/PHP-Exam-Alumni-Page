@@ -1,71 +1,47 @@
 <?php
-  if(isset($_POST["email"]) && isset($_POST["password"])){
+  if(isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"])){
+
     $host = 'mysql';
     $user = 'samuel';
     $password = 'samuel123';
     $dbname = 'db_php_web_exam';
-  
+
     // setup mysql config for PDO
+
     $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;
     $conn = new PDO($conf, $user, $password);
-  
-    // SELECT EXAMPLES
+
+    // INSERT EXAMPLES
+
+    $userDB = $_POST["name"];
+    $emailDB = $_POST["email"];
+    $passwordDB = $_POST["password"];
+    $hash = password_hash($passwordDB , PASSWORD_BCRYPT, ['cost' => 13]);
+
     try {
-      $sql = 'SELECT * FROM user WHERE email = :email';
-      $stm = $conn->prepare($sql);
-      $stm->execute(['email' => $_POST["email"]]);
-      $result = $stm->fetchAll();
+      $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
+      $stmt = $conn->prepare($sql);
+      $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
 
-      if(password_verify($_POST["password"], $result[0]["password"])){
-        usleep(300);
-      // header('Location: http://localhost:8080/');
-        header('Location: alumni.php');
-      }else {
-        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>Ooops, wrong password!</strong> please try again.
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
-              </div>';
-      }
+      // echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+      //       <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+      //       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      //       <span aria-hidden="true">&times;</span>
+      //       </button>
+      //       </div>';
 
+      usleep(300);
+      header('Location: http://localhost:8080/');
+  
     } catch(PDOException $e) {
-      echo $e->message();
+      echo 'error';
     }
 
-    // $stm = $conn->query("select * from user;");
-    // var_dump($stm->fetchAll());
-    // insert example
-    // $userDB = 'abaa cabral ';
-    // $emailDB = 'samuel@samuel.dev';
-    // $passwordDB = "ehuiehueh";
-    // $hash = password_hash($passwordDB , PASSWORD_BCRYPT, ['cost' => 13]);
-  
-    // $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
-    // $stmt = $conn->prepare($sql);
-    
-    // Connect to database
-    // try {
-      // $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
-  
-    // } catch(PDOException $e) {
-    //   echo 'error';
-    // }
-  
-   // check if passwords match
-  //  if(password_verify("ehuiehueh", $hash)) {
-  //    echo "<br> passwords match!";
-  //  }
-  //   echo '<br>Stmt executed successfully';
-  
   }
 
+?>
 
-  
-
-  ?>
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -76,13 +52,17 @@
   </head>
   <body>
     <header class="ml-4 text-center mt-4">
-      <h2 class="text-primary">Login with your credentials</h2>
+      <h2 class="text-primary">Sign up to the System</h2>
     </header>
     
     <br>
 
     <section class="container">
-      <form class="w-50 mx-auto" method="post" action="/index.php">
+      <form class="w-50 mx-auto" method="post" action="/signup.php">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Name</label>
+          <input type="text" class="form-control" name="name" id="NameEmail1" aria-describedby="emailHelp" placeholder="Enter your name" required>
+        </div>
         <div class="form-group">
           <label for="exampleInputEmail1">Email address</label>
           <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
@@ -93,7 +73,7 @@
           <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password" required>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
-        <a class="btn btn-outline-primary" href="signup.php" formaction="signup.php">Sign up</a>
+        <a class="btn btn-outline-primary" href="/" formaction="/">Go back</a>
       </form> 
 
     </section>

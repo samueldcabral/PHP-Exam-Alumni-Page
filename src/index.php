@@ -16,18 +16,30 @@
       $stm->execute(['email' => $_POST["email"]]);
       $result = $stm->fetchAll();
 
-      if(password_verify($_POST["password"], $result[0]["password"])){
-        usleep(300);
-      // header('Location: http://localhost:8080/');
-        header('Location: alumni.php');
-      }else {
-        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>Ooops, wrong password!</strong> please try again.
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
+      if(sizeof($result) == 0) {
+        echo '<div class="alert alert-danger" role="alert">
+              <strong>This email adress doesn\'t ring a bell!</strong> Register!
               </div>';
+
+        // usleep(4700);
+        echo("<meta http-equiv='refresh' content='1'>");
+      }else{
+        if(password_verify($_POST["password"], $result[0]["password"])){
+          setcookie('username', $result[0]["name"], time()*60);
+          setcookie('auth', true, time()*60);
+          usleep(300);
+          header('Location: alumni.php');
+        }else {
+          echo '<div class="alert alert-danger" role="alert">
+                <strong>password incorrect!</strong> try harder!
+                </div>';
+  
+          // usleep(44700);
+          echo("<meta http-equiv='refresh' content='1'>");
+        }
+
       }
+
 
     } catch(PDOException $e) {
       echo $e->message();
@@ -72,9 +84,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-D/7uAka7uwterkSxa2LwZR7RJqH2X6jfmhkJ0vFPGUtPyBMF2WMq9S+f9Ik5jJu1" crossorigin="anonymous">
-    <title>Document</title>
+    <title>Alumni Registry</title>
   </head>
   <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="/">Alumni Registry</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <ul class="navbar-nav justify-content-end">
+          <li class="nav-item active">
+            <?php 
+              if(isset($_COOKIE["auth"])) {
+                echo '<a class="nav-link" href="logout.php" formaction="logout.php">Welcome, ' . $_COOKIE["username"] . "!  <strong class='btn btn-outline-light'>Sign Out!</strong></a>";
+              }else {
+                echo '<a class="nav-link" href="signup.php" formaction="signup.php">What are you waiting for? <strong class="btn btn-outline-light">Sign up!</strong></a>';
+
+              }
+            ?>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
     <header class="ml-4 text-center mt-4">
       <h2 class="text-primary">Login with your credentials</h2>
     </header>

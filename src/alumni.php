@@ -1,4 +1,8 @@
 <?php
+  if(!isset($_COOKIE["auth"]) || $_COOKIE["auth"] == false) {
+    header('Location: http://localhost:8080/index.php');
+  }
+
   $host = 'mysql';
   $user = 'samuel';
   $password = 'samuel123';
@@ -42,9 +46,8 @@
                 <strong>Well done!</strong> Great success!
             </div>';
 
-      // usleep(300);\
-      // header("Refresh:0");
-
+      usleep(300);
+      echo("<meta http-equiv='refresh' content='1'>");
     } catch(PDOException $e) {
       echo 'error';
     }
@@ -83,12 +86,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-D/7uAka7uwterkSxa2LwZR7RJqH2X6jfmhkJ0vFPGUtPyBMF2WMq9S+f9Ik5jJu1" crossorigin="anonymous">
-    <title>Document</title>
+    <title>Alumni Registry</title>
   </head>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="/">Alumni Registry</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <ul class="navbar-nav justify-content-end">
+          <li class="nav-item active">
+            <a class="nav-link" href="logout.php" formaction="logout.php">Ready to leave, <?php echo $_COOKIE["username"] ?>? <strong class="btn btn-outline-light">Sign Out!</strong></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
     <header class="ml-4 text-center mt-4">
       <h2 class="text-primary">Check out our Alumni!</h2>
-      <a class="btn btn-outline-primary" href="/" formaction="index.php">Go back</a>
+      <!-- <a class="btn btn-outline-primary" href="/" formaction="index.php">Go back</a> -->
     </header>
     
     <br>
@@ -140,7 +158,7 @@
               echo '<td><a class="text-dark" href="' . $user["linkedin"] . '">Click Me!</a></td>';
               echo '<td>' . $user["course"] . '</td>';
               echo '<td>' . $user["campus"] . '</td>';
-              echo '</a></tr>';
+              echo '</tr>';
               $count++;
             }
           ?>

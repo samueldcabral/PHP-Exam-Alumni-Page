@@ -1,4 +1,5 @@
 <?php
+session_start();
   if(isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"])){
 
     $host = 'mysql';
@@ -48,9 +49,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-D/7uAka7uwterkSxa2LwZR7RJqH2X6jfmhkJ0vFPGUtPyBMF2WMq9S+f9Ik5jJu1" crossorigin="anonymous">
-    <title>Document</title>
+    <title>Alumni Registry</title>
   </head>
   <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="/">Alumni Registry</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <ul class="navbar-nav justify-content-end">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.php" formaction="index.php">Already have an account? <strong class="btn btn-outline-light">Go back, fam!</strong></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
     <header class="ml-4 text-center mt-4">
       <h2 class="text-primary">Sign up to the System</h2>
     </header>

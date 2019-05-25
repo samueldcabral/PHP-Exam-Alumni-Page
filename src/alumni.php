@@ -1,14 +1,12 @@
 <?php
   session_start();
-
-  // if(!isset($_COOKIE["auth"]) || $_COOKIE["auth"] == false) {
-  //   header('Location: http://localhost:8080/index.php');
-  // }
-
+  
+  //If user is not logged in, redirect to main page
   if(!isset($_SESSION["auth"]) || $_SESSION["auth"] == false) {
     header('Location: http://localhost:8080/index.php');
   }
 
+  //Config variables
   $host = 'mysql';
   $user = 'samuel';
   $password = 'samuel123';
@@ -18,38 +16,29 @@
   $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;
   $conn = new PDO($conf, $user, $password);
 
-  // SELECT EXAMPLES
+  // SELECT SQL
   try {
     $sql = 'SELECT * FROM alumni';
     $stm = $conn->prepare($sql);
     $stm->execute();
     $result = $stm->fetchAll();
 
-    // if(password_verify($_POST["password"], $result[0]["password"])){
-    //   usleep(300);
-    // // header('Location: http://localhost:8080/');
-    //   header('Location: alumni.php');
-    // }else {
-    //   echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    //         <strong>Ooops, wrong password!</strong> please try again.
-    //         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    //         <span aria-hidden="true">&times;</span>
-    //         </button>
-    //         </div>';
-    // }
-
   } catch(PDOException $e) {
     echo $e->message();
   }
 
   if(isset($_POST["name"])){
+
     try {
+
+      //Sanitizing user input
       $nameInput = htmlspecialchars($_POST["name"]);
       $emailInput = htmlspecialchars($_POST["email"]);
       $linkedinInput = htmlspecialchars($_POST["linkedin"]);
       $courseInput = htmlspecialchars($_POST["course"]);
       $campusInput = htmlspecialchars($_POST["campus"]);
 
+      //INSERT SQL
       $sql = 'INSERT INTO alumni(idalumni, name, email, linkedin, course, campus) VALUES(:idalumni, :user, :email, :linkedin, :course, :campus)';
       $stmt = $conn->prepare($sql);
       $stmt->execute(['idalumni' => date("y-m-d m:i:s"), 'user' => $nameInput, 'email' => $emailInput, 'linkedin' => $linkedinInput, 'course' => $courseInput, 'campus' => $campusInput]) ;
@@ -60,35 +49,11 @@
 
       usleep(300);
       echo("<meta http-equiv='refresh' content='1'>");
+
     } catch(PDOException $e) {
       echo 'error';
     }
   }
-  // $stm = $conn->query("select * from user;");
-  // var_dump($stm->fetchAll());
-  // insert example
-  // $userDB = 'abaa cabral ';
-  // $emailDB = 'samuel@samuel.dev';
-  // $passwordDB = "ehuiehueh";
-  // $hash = password_hash($passwordDB , PASSWORD_BCRYPT, ['cost' => 13]);
-
-  // $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
-  // $stmt = $conn->prepare($sql);
-  
-  // Connect to database
-  // try {
-    // $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
-
-  // } catch(PDOException $e) {
-  //   echo 'error';
-  // }
-
- // check if passwords match
-//  if(password_verify("ehuiehueh", $hash)) {
-//    echo "<br> passwords match!";
-//  }
-//   echo '<br>Stmt executed successfully';
-
   ?>
 
   <!DOCTYPE html>
@@ -118,7 +83,6 @@
 
     <header class="ml-4 text-center mt-4">
       <h2 class="text-primary font-weight-bold">Check out our Alumni!</h2>
-      <!-- <a class="btn btn-outline-primary" href="/" formaction="index.php">Go back</a> -->
     </header>
     
     <br>
@@ -130,17 +94,14 @@
       <form class="form-inline" method="post" action="/alumni.php">
         <label class="sr-only" for="inlineFormInputName2">Name</label>
         <input type="text" class="form-control" name="name" id="inlineFormInputName2" placeholder="Name" required>
-
         <label class="sr-only" for="inlineFormInputGroupUsername2">Email</label>
         <input type="email" class="form-control ml-2" name="email" id="inlineFormInputGroupUsername2" placeholder="Email" required>
-  
         <label class="sr-only" for="inlineFormInputGroupUsername2">Linkedin</label>
         <input type="text" class="form-control ml-2" name="linkedin" id="inlineFormInputGroupUsername2" placeholder="Linkedin" required>
-
+        
         <select class="form-control ml-2" name="course">
           <option>cstsi</option>
         </select>
-
         <select class="form-control ml-2" name="campus">
           <option>ifpb-jp</option>
         </select>
@@ -181,7 +142,6 @@
           ?>
         </tbody>
       </table>
-
     </section>
   </body>
   </html>

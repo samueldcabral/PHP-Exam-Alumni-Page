@@ -1,20 +1,24 @@
 <?php
   $errArr = [];
 
+  //Check if form has been submitted
   if(isset($_POST["email"]) && isset($_POST["password"])){
+
+    // Config variables
     $host = 'mysql';
     $user = 'samuel';
     $password = 'samuel123';
     $dbname = 'db_php_web_exam';
-
-    $emailInput = htmlspecialchars($_POST["email"]);
-    $passwordInput = htmlspecialchars($_POST["password"]);
   
     // setup mysql config for PDO
     $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;
     $conn = new PDO($conf, $user, $password);
   
-    // SELECT EXAMPLES
+    // Sanitizing user input
+    $emailInput = htmlspecialchars($_POST["email"]);
+    $passwordInput = htmlspecialchars($_POST["password"]);
+
+    // SELECT SQL
     try {
       $sql = 'SELECT * FROM user WHERE email = :email';
       $stm = $conn->prepare($sql);
@@ -23,70 +27,24 @@
 
       if(sizeof($result) == 0) {
         $errArr["err"] = "Email";
-        // echo " samuel :'";
-        // echo '<div class="alert alert-danger" role="alert">
-        //       <strong>This email adress doesn\'t ring a bell!</strong> Register!
-        //       </div>';
 
-        // usleep(4700);
-        // echo("<meta http-equiv='refresh' content='1'>");
       }else{
         if(password_verify($passwordInput, $result[0]["password"])){
           session_start();
+
           $_SESSION['username'] = $result[0]["name"];
           $_SESSION['auth'] = true;
-
-          // setcookie('username', $result[0]["name"], time()*60);
-          // setcookie('auth', true, time()*60);
           usleep(300);
           header('Location: alumni.php');
         }else {
           $errArr["err"] = "Password";
-          // echo '<div class="alert alert-danger" role="alert">
-          //       <strong>password incorrect!</strong> try harder!
-          //       </div>';
-  
-          // // usleep(44700);
-          // echo("<meta http-equiv='refresh' content='1'>");
         }
-
       }
-
 
     } catch(PDOException $e) {
       echo $e->message();
     }
-
-    // $stm = $conn->query("select * from user;");
-    // var_dump($stm->fetchAll());
-    // insert example
-    // $userDB = 'abaa cabral ';
-    // $emailDB = 'samuel@samuel.dev';
-    // $passwordDB = "ehuiehueh";
-    // $hash = password_hash($passwordDB , PASSWORD_BCRYPT, ['cost' => 13]);
-  
-    // $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
-    // $stmt = $conn->prepare($sql);
-    
-    // Connect to database
-    // try {
-      // $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
-  
-    // } catch(PDOException $e) {
-    //   echo 'error';
-    // }
-  
-   // check if passwords match
-  //  if(password_verify("ehuiehueh", $hash)) {
-  //    echo "<br> passwords match!";
-  //  }
-  //   echo '<br>Stmt executed successfully';
-  
   }
-
-
-  
-
   ?>
 
   <!DOCTYPE html>
@@ -114,7 +72,6 @@
                 echo '<a class="nav-link" href="logout.php" formaction="logout.php">Welcome, ' . $_SESSION["username"] . "!  <strong class='btn btn-outline-light'>Sign Out!</strong></a>";
               }else {
                 echo '<a class="nav-link" href="signup.php" formaction="signup.php">What are you waiting for? <strong class="btn btn-outline-light">Sign up!</strong></a>';
-
               }
             ?>
           </li>
@@ -154,7 +111,6 @@
         <button type="submit" class="btn btn-primary">Submit</button>
         <a class="btn btn-outline-primary" href="signup.php" formaction="signup.php">Sign up</a>
       </form> 
-
     </section>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -1,24 +1,23 @@
 <?php
   session_start();
 
+  //If user is already logged in, there's no need to sign up
   if(isset($_SESSION["auth"])) {
     header('Location: index.php');
   }
 
   if(isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"])){
-
+    //config variables
     $host = 'mysql';
     $user = 'samuel';
     $password = 'samuel123';
     $dbname = 'db_php_web_exam';
 
     // setup mysql config for PDO
-
     $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;
     $conn = new PDO($conf, $user, $password);
 
-    // INSERT EXAMPLES
-
+    // sanitizing user input
     $userDB = htmlspecialchars($_POST["name"]);
     $emailDB = htmlspecialchars($_POST["email"]);
     $passwordDB = htmlspecialchars($_POST["password"]);
@@ -30,9 +29,8 @@
       $stm->execute(['email' => $emailDB]);
       $result = $stm->fetchAll();
 
-      if(sizeof($result)) {
-        
-      } else {
+      if(!sizeof($result)) {
+        //INSERT SQL
         $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
         $stmt = $conn->prepare($sql);
         $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
@@ -40,21 +38,11 @@
         usleep(300);
         header('Location: http://localhost:8080/');
       }
-
-      // echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-      //       <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-      //       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      //       <span aria-hidden="true">&times;</span>
-      //       </button>
-      //       </div>';
-
   
     } catch(PDOException $e) {
       echo 'error';
     }
-
   }
-
 ?>
 
 <!DOCTYPE html>

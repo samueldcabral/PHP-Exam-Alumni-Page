@@ -1,5 +1,10 @@
 <?php
-session_start();
+  session_start();
+
+  if(isset($_SESSION["auth"])) {
+    header('Location: index.php');
+  }
+
   if(isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"])){
 
     $host = 'mysql';
@@ -14,15 +19,27 @@ session_start();
 
     // INSERT EXAMPLES
 
-    $userDB = $_POST["name"];
-    $emailDB = $_POST["email"];
-    $passwordDB = $_POST["password"];
+    $userDB = htmlspecialchars($_POST["name"]);
+    $emailDB = htmlspecialchars($_POST["email"]);
+    $passwordDB = htmlspecialchars($_POST["password"]);
     $hash = password_hash($passwordDB , PASSWORD_BCRYPT, ['cost' => 13]);
 
     try {
-      $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
-      $stmt = $conn->prepare($sql);
-      $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
+      $sql = 'SELECT * FROM user WHERE email = :email';
+      $stm = $conn->prepare($sql);
+      $stm->execute(['email' => $emailDB]);
+      $result = $stm->fetchAll();
+
+      if(sizeof($result)) {
+        
+      } else {
+        $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
+
+        usleep(300);
+        header('Location: http://localhost:8080/');
+      }
 
       // echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
       //       <strong>Holy guacamole!</strong> You should check in on some of those fields below.
@@ -31,8 +48,6 @@ session_start();
       //       </button>
       //       </div>';
 
-      usleep(300);
-      header('Location: http://localhost:8080/');
   
     } catch(PDOException $e) {
       echo 'error';
@@ -75,6 +90,16 @@ session_start();
     <br>
 
     <section class="container">
+
+      <?php if($result){if(sizeof($result)) {
+        echo '<div class="w-50 mx-auto alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Wooow!</strong> this email is already in our DB.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+              </div>';
+      } }?>
+
       <form class="w-50 mx-auto" method="post" action="/signup.php">
         <div class="form-group">
           <label for="exampleInputEmail1">Name</label>

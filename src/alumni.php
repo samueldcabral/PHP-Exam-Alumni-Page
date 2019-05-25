@@ -1,5 +1,11 @@
 <?php
-  if(!isset($_COOKIE["auth"]) || $_COOKIE["auth"] == false) {
+  session_start();
+
+  // if(!isset($_COOKIE["auth"]) || $_COOKIE["auth"] == false) {
+  //   header('Location: http://localhost:8080/index.php');
+  // }
+
+  if(!isset($_SESSION["auth"]) || $_SESSION["auth"] == false) {
     header('Location: http://localhost:8080/index.php');
   }
 
@@ -38,9 +44,15 @@
 
   if(isset($_POST["name"])){
     try {
+      $nameInput = htmlspecialchars($_POST["name"]);
+      $emailInput = htmlspecialchars($_POST["email"]);
+      $linkedinInput = htmlspecialchars($_POST["linkedin"]);
+      $courseInput = htmlspecialchars($_POST["course"]);
+      $campusInput = htmlspecialchars($_POST["campus"]);
+
       $sql = 'INSERT INTO alumni(idalumni, name, email, linkedin, course, campus) VALUES(:idalumni, :user, :email, :linkedin, :course, :campus)';
       $stmt = $conn->prepare($sql);
-      $stmt->execute(['idalumni' => date("y-m-d m:i:s"), 'user' => $_POST["name"], 'email' => $_POST["name"], 'linkedin' => $_POST["linkedin"], 'course' => $_POST["course"], 'campus' => $_POST["campus"]]) ;
+      $stmt->execute(['idalumni' => date("y-m-d m:i:s"), 'user' => $nameInput, 'email' => $emailInput, 'linkedin' => $linkedinInput, 'course' => $courseInput, 'campus' => $campusInput]) ;
       
       echo '<div class="alert alert-success" role="alert">
                 <strong>Well done!</strong> Great success!
@@ -98,20 +110,22 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item active">
-            <a class="nav-link" href="logout.php" formaction="logout.php">Ready to leave, <?php echo $_COOKIE["username"] ?>? <strong class="btn btn-outline-light">Sign Out!</strong></a>
+            <a class="nav-link" href="logout.php" formaction="logout.php">Ready to leave, <?php echo $_SESSION["username"] ?>? <strong class="btn btn-outline-light">Sign Out!</strong></a>
           </li>
         </ul>
       </div>
     </nav>
 
     <header class="ml-4 text-center mt-4">
-      <h2 class="text-primary">Check out our Alumni!</h2>
+      <h2 class="text-primary font-weight-bold">Check out our Alumni!</h2>
       <!-- <a class="btn btn-outline-primary" href="/" formaction="index.php">Go back</a> -->
     </header>
     
     <br>
 
     <section class="container">
+
+      <h4 class="mb-4 text-primary">Register a new Alumnus!</h4>
 
       <form class="form-inline" method="post" action="/alumni.php">
         <label class="sr-only" for="inlineFormInputName2">Name</label>
@@ -135,6 +149,9 @@
       </form>
 
       <br>
+      <hr>
+
+      <h4 class="mb-4 text-primary">List of all alumni...</h4>
 
       <table class="table table-hover">
         <thead class="thead-light">

@@ -37,3 +37,16 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./logs/mysql:/var/log/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    networks:
+      - app-tier
+    ports:
+      - "8000:80"
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    depends_on:
+      - web
+      - mysql

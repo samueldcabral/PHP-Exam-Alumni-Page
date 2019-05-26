@@ -1,5 +1,10 @@
 <?php
+  session_start();
   $errArr = [];
+
+  if(isset($_SESSION["auth"])) {
+    header('Location: index.php');
+  }
 
   //Check if form has been submitted
   if(isset($_POST["email"]) && isset($_POST["password"])){
@@ -30,8 +35,6 @@
 
       }else{
         if(password_verify($passwordInput, $result[0]["password"])){
-          session_start();
-
           $_SESSION['username'] = $result[0]["name"];
           $_SESSION['auth'] = true;
           usleep(300);

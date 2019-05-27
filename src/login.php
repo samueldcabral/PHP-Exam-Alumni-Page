@@ -1,5 +1,6 @@
 <?php
   session_start();
+  require 'config/pdo.php';
   $errArr = [];
 
   if(isset($_SESSION["auth"])) {
@@ -8,25 +9,17 @@
 
   //Check if form has been submitted
   if(isset($_POST["email"]) && isset($_POST["password"])){
-
-    // Config variables
-    $host = 'mysql';
-    $user = 'samuel';
-    $password = 'samuel123';
-    $dbname = 'db_php_web_exam';
   
-    // setup mysql config for PDO
-    $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;
-    $conn = new PDO($conf, $user, $password);
-  
-    // Sanitizing user input
-    $emailInput = htmlspecialchars($_POST["email"]);
-    $passwordInput = htmlspecialchars($_POST["password"]);
-
     // SELECT SQL
     try {
+      $pdo = getPDO();    
+
+      // Sanitizing user input
+      $emailInput = htmlspecialchars($_POST["email"]);
+      $passwordInput = htmlspecialchars($_POST["password"]);
+
       $sql = 'SELECT * FROM user WHERE email = :email';
-      $stm = $conn->prepare($sql);
+      $stm = $pdo->prepare($sql);
       $stm->execute(['email' => $emailInput]);
       $result = $stm->fetchAll();
 

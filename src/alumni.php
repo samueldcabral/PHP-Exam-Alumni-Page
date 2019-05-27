@@ -1,25 +1,19 @@
 <?php
   session_start();
-  
+  require 'config/pdo.php';
+
   //If user is not logged in, redirect to main page
   if(!isset($_SESSION["auth"]) || $_SESSION["auth"] == false) {
     header('Location: http://localhost:8080/index.php');
   }
 
-  //Config variables
-  $host = 'mysql';
-  $user = 'samuel';
-  $password = 'samuel123';
-  $dbname = 'db_php_web_exam';
-
-  // setup mysql config for PDO
-  $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;
-  $conn = new PDO($conf, $user, $password);
-
   // SELECT SQL
   try {
+    //get pdo from config/pdo.php
+    $pdo = getPDO();
+
     $sql = 'SELECT * FROM alumni';
-    $stm = $conn->prepare($sql);
+    $stm = $pdo->prepare($sql);
     $stm->execute();
     $result = $stm->fetchAll();
 
@@ -40,7 +34,7 @@
 
       //INSERT SQL
       $sql = 'INSERT INTO alumni(idalumni, name, email, linkedin, course, campus) VALUES(:idalumni, :user, :email, :linkedin, :course, :campus)';
-      $stmt = $conn->prepare($sql);
+      $stmt = $pdo->prepare($sql);
       $stmt->execute(['idalumni' => date("y-m-d m:i:s"), 'user' => $nameInput, 'email' => $emailInput, 'linkedin' => $linkedinInput, 'course' => $courseInput, 'campus' => $campusInput]) ;
       
       echo '<div class="alert alert-success" role="alert">

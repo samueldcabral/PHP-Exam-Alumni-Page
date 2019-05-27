@@ -1,5 +1,6 @@
 <?php
   session_start();
+  require 'config/pdo.php';
 
   //If user is already logged in, there's no need to sign up
   if(isset($_SESSION["auth"])) {
@@ -7,32 +8,25 @@
   }
 
   if(isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"])){
-    //config variables
-    $host = 'mysql';
-    $user = 'samuel';
-    $password = 'samuel123';
-    $dbname = 'db_php_web_exam';
-
-    // setup mysql config for PDO
-    $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;
-    $conn = new PDO($conf, $user, $password);
-
-    // sanitizing user input
-    $userDB = htmlspecialchars($_POST["name"]);
-    $emailDB = htmlspecialchars($_POST["email"]);
-    $passwordDB = htmlspecialchars($_POST["password"]);
-    $hash = password_hash($passwordDB , PASSWORD_BCRYPT, ['cost' => 13]);
-
+    
     try {
+      $pdo = getPDO();    
+  
+      // sanitizing user input
+      $userDB = htmlspecialchars($_POST["name"]);
+      $emailDB = htmlspecialchars($_POST["email"]);
+      $passwordDB = htmlspecialchars($_POST["password"]);
+      $hash = password_hash($passwordDB , PASSWORD_BCRYPT, ['cost' => 13]);
+
       $sql = 'SELECT * FROM user WHERE email = :email';
-      $stm = $conn->prepare($sql);
+      $stm = $pdo->prepare($sql);
       $stm->execute(['email' => $emailDB]);
       $result = $stm->fetchAll();
 
       if(!sizeof($result)) {
         //INSERT SQL
         $sql = 'INSERT INTO user(name, email, password) VALUES(:user, :email, :password)';
-        $stmt = $conn->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute(['user' => $userDB, 'email' => $emailDB, 'password' => $hash]);
 
         usleep(300);

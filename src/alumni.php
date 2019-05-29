@@ -18,7 +18,7 @@
     $result = $stm->fetchAll();
 
   } catch(PDOException $e) {
-    echo $e->message();
+    echo $e;
   }
 
   if(isset($_POST["name"])){
@@ -117,15 +117,6 @@
       <h4 class="mb-4 text-primary">List of all alumni...</h4>
 
       
-        
-        
-          
-          <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-          
-        <!-- </div>
-      </div> -->
-
-      
       <div class="row mx-auto">
       <?php 
         foreach($result as $user) {
@@ -147,21 +138,6 @@
         }
       ?>
       </div>
-
-      <!-- <table class="table table-hover">
-        <thead class="thead-light">
-          <tr>
-            <th>#</th>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Linkedin</th>
-            <th>Course</th>
-            <th>Campus</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table> -->
     </section>
   </body>
   </html>

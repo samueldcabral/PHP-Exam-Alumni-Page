@@ -13,7 +13,7 @@
     // SELECT SQL
     try {
       $pdo = getPDO();    
-
+      
       // Sanitizing user input
       $emailInput = htmlspecialchars($_POST["email"]);
       $passwordInput = htmlspecialchars($_POST["password"]);
@@ -38,7 +38,7 @@
       }
 
     } catch(PDOException $e) {
-      echo $e->message();
+      echo $e;
     }
   }
   ?>

@@ -1,10 +1,11 @@
 <?php
 
-//Config variables
 function getPDO() {
+  //Parse .env files to hide sensitive data like passwords
   $env = parse_ini_file('.env');
 
-  $host = 'mysql';
+  //config variables
+  $host = $env["host"];
   $user = $env["user"];
   $password = $env["password"];
   $dbname = $env["database"];

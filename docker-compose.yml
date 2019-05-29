@@ -37,6 +37,7 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./logs/mysql:/var/log/mysql
+      - "./mysql/initial_data:docker-entrypoint-initdb.d"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin

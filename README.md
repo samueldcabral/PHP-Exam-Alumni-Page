@@ -1,6 +1,6 @@
 # PHP-Login-Page-Exam
 
-## Install
+## Installation
 
 clone repository
 

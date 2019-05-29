@@ -32,7 +32,7 @@
       $profileInput = htmlspecialchars($_POST["linkedin"]);
       $courseInput = htmlspecialchars($_POST["course"]);
       $campusInput = htmlspecialchars($_POST["campus"]);
-      // fe
+      
       // echo $idInput . " : " . $nameInput;
       //INSERT SQL
       $sql = 'INSERT INTO alumni(idalumni, name, email, profile, course, campus) VALUES(:idalumni, :user, :email, :profile, :course, :campus)';

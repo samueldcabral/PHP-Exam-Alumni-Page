@@ -31,6 +31,8 @@
 
         usleep(300);
         header('Location: http://localhost:8080/');
+      } else {
+        $errArr["err"] = ["Email"];
       }
   
     } catch(PDOException $e) {
@@ -74,14 +76,14 @@
 
     <section class="container">
 
-      <?php if($result){if(sizeof($result)) {
+      <?php if($errArr){
         echo '<div class="w-50 mx-auto alert alert-warning alert-dismissible fade show" role="alert">
-              <strong>Wooow!</strong> this email is already in our DB.
+              <strong>Wooow!</strong> this ' .$errArr["err"] . ' is already in our DB.
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
               </div>';
-      } }?>
+      }?>
 
       <form class="w-50 mx-auto" method="post" action="/signup.php">
         <div class="form-group">

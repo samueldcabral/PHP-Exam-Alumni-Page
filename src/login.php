@@ -102,7 +102,7 @@
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password" required>
+          <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Enter Password" required>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
         <a class="btn btn-outline-primary" href="signup.php" formaction="signup.php">Sign up</a>

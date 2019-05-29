@@ -26,16 +26,18 @@
     try {
 
       //Sanitizing user input
+      $idInput = htmlspecialchars($_POST["id"]);
       $nameInput = htmlspecialchars($_POST["name"]);
       $emailInput = htmlspecialchars($_POST["email"]);
-      $linkedinInput = htmlspecialchars($_POST["linkedin"]);
+      $profileInput = htmlspecialchars($_POST["linkedin"]);
       $courseInput = htmlspecialchars($_POST["course"]);
       $campusInput = htmlspecialchars($_POST["campus"]);
-
+      
+      // echo $idInput . " : " . $nameInput;
       //INSERT SQL
-      $sql = 'INSERT INTO alumni(idalumni, name, email, linkedin, course, campus) VALUES(:idalumni, :user, :email, :linkedin, :course, :campus)';
+      $sql = 'INSERT INTO alumni(idalumni, name, email, profile, course, campus) VALUES(:idalumni, :user, :email, :profile, :course, :campus)';
       $stmt = $pdo->prepare($sql);
-      $stmt->execute(['idalumni' => date("y-m-d m:i:s"), 'user' => $nameInput, 'email' => $emailInput, 'linkedin' => $linkedinInput, 'course' => $courseInput, 'campus' => $campusInput]) ;
+      $stmt->execute(['idalumni' => $idInput , 'user' => $nameInput, 'email' => $emailInput, 'profile' => $profileInput, 'course' => $courseInput, 'campus' => $campusInput]) ;
       
       echo '<div class="alert alert-success" role="alert">
                 <strong>Well done!</strong> Great success!
@@ -86,14 +88,18 @@
       <h4 class="mb-4 text-primary">Register a new Alumnus!</h4>
 
       <form class="form-inline" method="post" action="/alumni.php">
+        <label class="sr-only" for="inlineFormInputName2">Id</label>
+        <input type="text" class="form-control mb-2" name="id" id="inlineFormInputName2" placeholder="Id">
         <label class="sr-only" for="inlineFormInputName2">Name</label>
-        <input type="text" class="form-control" name="name" id="inlineFormInputName2" placeholder="Name" required>
+        <input type="text" class="form-control ml-2 mb-2" name="name" id="inlineFormInputName2" placeholder="Name" required>
         <label class="sr-only" for="inlineFormInputGroupUsername2">Email</label>
-        <input type="email" class="form-control ml-2" name="email" id="inlineFormInputGroupUsername2" placeholder="Email" required>
+        <input type="email" class="form-control ml-2 mb-2" name="email" id="inlineFormInputGroupUsername2" placeholder="Email" required>
         <label class="sr-only" for="inlineFormInputGroupUsername2">Linkedin</label>
-        <input type="text" class="form-control ml-2" name="linkedin" id="inlineFormInputGroupUsername2" placeholder="Linkedin" required>
+        <input type="text" class="form-control ml-2 mb-2" name="linkedin" id="inlineFormInputGroupUsername2" placeholder="Linkedin" required>
         
-        <select class="form-control ml-2" name="course">
+        <div class="mx-auto">
+        
+        <select class="form-control" name="course">
           <option>cstsi</option>
         </select>
         <select class="form-control ml-2" name="campus">
@@ -101,6 +107,8 @@
         </select>
 
         <button type="submit" class="btn btn-primary ml-2 align-items-centfer">Save</button>
+        
+        </div>
       </form>
 
       <br>
@@ -108,7 +116,39 @@
 
       <h4 class="mb-4 text-primary">List of all alumni...</h4>
 
-      <table class="table table-hover">
+      
+        
+        
+          
+          <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+          
+        <!-- </div>
+      </div> -->
+
+      
+      <div class="row mx-auto">
+      <?php 
+        foreach($result as $user) {
+          echo '<div class="card .col-md-4 m-2" style="width: 240px;">';
+          
+          $filename = __DIR__ . '/img/' . $user["idalumni"] . '.jpg';
+
+          if(file_exists($filename)) {
+            echo '<img src="http://localhost:8080/img/' . $user["idalumni"] . '.jpg" class="card-img-top" alt="' . $user["name"]. '">';
+  
+          } else {
+            echo '<img src="http://localhost:8080/img/placeholder.jpg" class="card-img-top" alt="a' . $user["name"]. '">';
+          }
+          echo '<div class="card-body">';
+          echo '<h5 class="card-title" style="height:70px!important; min-height:70px!important;">' . $user["name"] . '</h5>';
+          echo '<a href="' . $user["profile"]. '" class="btn btn-primary">Go to Profile</a>';
+          echo '</div>';
+          echo '</div>';
+        }
+      ?>
+      </div>
+
+      <!-- <table class="table table-hover">
         <thead class="thead-light">
           <tr>
             <th>#</th>
@@ -120,22 +160,8 @@
           </tr>
         </thead>
         <tbody>
-          <?php 
-            $count = 1;
-            foreach($result as $user) {
-              echo '<tr>';
-              echo '<th scope="row">' . $count . '</th>';
-              echo '<td>' . $user["name"] . '</td>';
-              echo '<td>' . $user["email"] . '</td>';
-              echo '<td><a class="text-dark" href="' . $user["linkedin"] . '">Click Me!</a></td>';
-              echo '<td>' . $user["course"] . '</td>';
-              echo '<td>' . $user["campus"] . '</td>';
-              echo '</tr>';
-              $count++;
-            }
-          ?>
         </tbody>
-      </table>
+      </table> -->
     </section>
   </body>
   </html>

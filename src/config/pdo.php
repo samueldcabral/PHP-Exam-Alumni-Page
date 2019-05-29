@@ -7,7 +7,7 @@ function getPDO() {
   $host = 'mysql';
   $user = $env["user"];
   $password = $env["password"];
-  $dbname = 'db_php_web_exam';
+  $dbname = $env["database"];
 
   // setup mysql config for PDO
   $conf = 'mysql:host=' . $host . ';dbname=' . $dbname;

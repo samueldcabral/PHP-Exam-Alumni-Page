@@ -22,4 +22,4 @@ Pull images from docker compose
 
 ### Alumni list page
 
-![Alumni list page](https://i.imgur.com/Oqts9ie.png "Alumni list page")
+![Alumni list page](https://i.imgur.com/uZKOppo.png "Alumni list page")
